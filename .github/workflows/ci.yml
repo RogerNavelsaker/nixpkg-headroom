@@ -19,6 +19,11 @@ jobs:
         with:
           extra_nix_config: |
             experimental-features = nix-command flakes
+      - name: Set up Cachix
+        uses: cachix/cachix-action@v16
+        with:
+          name: rogernavelsaker
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
       - name: Check flake and tests
         run: nix flake check --accept-flake-config --print-build-logs
       - name: Build package and image
