@@ -1,0 +1,25 @@
+name: CI & Cache Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+      - name: Check flake and tests
+        run: nix flake check --accept-flake-config --print-build-logs
+      - name: Build package and image
+        run: nix build .#headroom .#headroom-image --accept-flake-config --no-link --print-build-logs
