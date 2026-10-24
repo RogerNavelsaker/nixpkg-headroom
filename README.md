@@ -6,7 +6,7 @@ Nix packaging and a rootless OCI image for Headroom. The standalone package incl
 
 - `packages.default` / `packages.headroom`: Headroom 0.40.0 CLI, pinned to `3c418f6f0b190ad1060413c0eadd77f20ab3cf46`, which contains the Caveman retrieval safeguard.
 - `packages.headroom-service`: service-specific Headroom package with Magika removed; it selects the tested fallback detector.
-- `packages.headroom-image`: rootless OCI image `agent-services-headroom`, running as UID/GID 10001 and listening on port 8787.
+- `packages.headroom-image`: rootless OCI image locally tagged `agent-services-headroom`, published to `ghcr.io/rogernavelsaker/headroom`, running as UID/GID 10001 on port 8787.
 
 The Nix check runs tests for the Caveman retrieval exclusions and byte-exact OpenAI/Anthropic recovery payloads. It also verifies that the service variant works without Magika and leaves unrelated retrieval tools eligible for compression.
 
@@ -21,4 +21,4 @@ nix build .#headroom .#headroom-image --no-link
 
 ## Image publishing
 
-The `publish.yml` workflow is manual-only. It publishes `latest` and a commit-SHA tag to `ghcr.io/rogernavelsaker/agent-services-headroom`. The split does not publish an image or replace existing registry tags.
+The `publish.yml` workflow is manual-only. It publishes `latest` and a commit-SHA tag to `ghcr.io/rogernavelsaker/headroom`. The split does not publish an image or replace existing registry tags.
