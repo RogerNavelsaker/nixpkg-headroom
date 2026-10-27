@@ -153,7 +153,7 @@
             Labels = {
               "org.opencontainers.image.title" = "Headroom Proxy";
               "org.opencontainers.image.description" =
-                "Headroom with Magika and Kompress ML disabled; structural transforms retained";
+                "Headroom with Magika omitted and local Kompress ML enabled";
               "org.opencontainers.image.source" = "https://github.com/RogerNavelsaker/nixpkg-headroom";
               "org.opencontainers.image.version" = "0.40.0+pr4014";
               "org.opencontainers.image.revision" = headroomRevision;
@@ -182,8 +182,6 @@
               "HEADROOM_CONFIG_DIR=/config"
               "HEADROOM_BEACON=off"
               "HEADROOM_DETECT_BACKEND=python"
-              "HEADROOM_DISABLE_KOMPRESS=1"
-              "HEADROOM_DISABLE_KOMPRESS_FALLBACK=1"
             ];
             WorkingDir = "/data";
             Volumes = {
