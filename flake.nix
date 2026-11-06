@@ -65,7 +65,6 @@
             click
             rich
             opentelemetry-api
-            ast-grep-cli
             pyyaml
             tomli
             tomlkit
@@ -86,7 +85,13 @@
             sqlite-vec
           ];
 
+          pythonRemoveDeps = [ "ast-grep-cli" ];
+
           makeWrapperArgs = [
+            "--prefix"
+            "PATH"
+            ":"
+            "${lib.makeBinPath [ pkgs.ast-grep ]}"
             "--prefix"
             "PYTHONPATH"
             ":"
@@ -141,7 +146,7 @@
             pkgs.tzdata
             pkgs.dockerTools.fakeNss
             headroomService
-            py.ast-grep-cli
+            pkgs.ast-grep
           ];
           fakeRootCommands = ''
             mkdir -p ./tmp ./data ./config
@@ -171,7 +176,7 @@
               "PATH=${
                 lib.makeBinPath [
                   headroomService
-                  py.ast-grep-cli
+                  pkgs.ast-grep
                 ]
               }"
               "SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
