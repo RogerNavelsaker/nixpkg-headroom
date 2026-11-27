@@ -34,23 +34,25 @@
         lib = pkgs.lib;
         python = pkgs.python313;
         py = python.pkgs;
-        headroomRevision = "3c418f6f0b190ad1060413c0eadd77f20ab3cf46";
+        headroomRevision = "ce0460cfa8598dc939243dbc7aec4b2d35f4e44a";
         headroomSrc = pkgs.fetchFromGitHub {
           owner = "headroomlabs-ai";
           repo = "headroom";
           rev = headroomRevision;
-          hash = "sha256-OSfbEyGIXxceIwE0DqKI/ZIKC8M8iJd/vNnfqZ+x9Fc=";
+          hash = "sha256-F6EY93xTo/VjMW3SAT1LOqBjMTHBZp4GcnO/Wqe1VQs=";
         };
 
         headroom = py.buildPythonApplication (finalAttrs: {
           pname = "headroom-ai";
-          version = "0.40.0";
+          version = "0.45.0";
           pyproject = true;
           src = headroomSrc;
+          # Upstream floors (click, opentelemetry-api, tomlkit, filelock) run ahead of nixpkgs.
+          dontCheckRuntimeDeps = true;
 
           cargoDeps = pkgs.rustPlatform.fetchCargoVendor {
             inherit (finalAttrs) pname src version;
-            hash = "sha256-8Y8FyX1LxLO7dHNDaMK8NAiRjZkNU0bsM4P+HbMvReI=";
+            hash = "sha256-kaFUHCUigzdZnmo46hUIgndZiqQpJ4r3grDWLCDUodQ=";
           };
 
           nativeBuildInputs = [
@@ -127,7 +129,7 @@
         headroomService = headroom.overridePythonAttrs (old: {
           dependencies = lib.filter (dependency: dependency != py.magika) old.dependencies;
           postPatch = (old.postPatch or "") + ''
-            substituteInPlace headroom/cli/proxy.py --replace-fail '        "magika",' '        # Magika omitted; use the fallback detector.'
+            substituteInPlace headroom/cli/proxy.py --replace-fail 'required_modules.extend(["magika", "onnxruntime"])' 'required_modules.extend(["onnxruntime"])'
           '';
           pytestFlags = old.pytestFlags ++ [ "${./tests/test_headroom_no_magika.py}" ];
         });
@@ -155,7 +157,7 @@
               "org.opencontainers.image.description" =
                 "Headroom with Magika omitted and local Kompress ML enabled";
               "org.opencontainers.image.source" = "https://github.com/RogerNavelsaker/nixpkg-headroom";
-              "org.opencontainers.image.version" = "0.40.0+pr4014";
+              "org.opencontainers.image.version" = "0.45.0";
               "org.opencontainers.image.revision" = headroomRevision;
             };
             User = "10001:10001";
